@@ -1,13 +1,16 @@
+//probamos cambiando el lm35 por el pote y tambien vimos distintos tipos de print para la uart
+
 // formas de usar print en uart
-potentiometerReading = potentiometer.read(); //guardo un valor
-sprintf ( str, "alguna frase %.2f\r\n", potentiometerReading ); // guardo en str la frase con el valor
-stringLength = strlen(str); // largo
-uartUsb.write( str, stringLength ); // escrbo en uart
-//otra forma
-uartUsb.write( "Press '2' to get the gas detector state\r\n", 41 );  // ñastring y el largo
-// para leer
-uartUsb.readable() // devuelve true si hay entrada
-uartUsb.read( &receivedChar, 1 ); // guarda en putero receivedChar la cantidad de caracteres 1
+// potentiometerReading = potentiometer.read(); //guardo un valor
+// sprintf ( str, "alguna frase %.2f\r\n", potentiometerReading ); // guardo en str la frase con el valor
+// stringLength = strlen(str); // largo
+// uartUsb.write( str, stringLength ); // escrbo en uart
+// //otra forma
+// uartUsb.write( "Press '2' to get the gas detector state\r\n", 41 );  // ñastring y el largo
+// // para leer
+// uartUsb.readable() // devuelve true si hay entrada
+// uartUsb.read( &receivedChar, 1 ); // guarda en putero receivedChar la cantidad de caracteres 1
+
 
 //=====[Libraries]=============================================================
 
