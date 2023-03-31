@@ -1,8 +1,19 @@
+// formas de usar print en uart
+potentiometerReading = potentiometer.read(); //guardo un valor
+sprintf ( str, "alguna frase %.2f\r\n", potentiometerReading ); // guardo en str la frase con el valor
+stringLength = strlen(str); // largo
+uartUsb.write( str, stringLength ); // escrbo en uart
+//otra forma
+uartUsb.write( "Press '2' to get the gas detector state\r\n", 41 );  // ñastring y el largo
+// para leer
+uartUsb.readable() // devuelve true si hay entrada
+uartUsb.read( &receivedChar, 1 ); // guarda en putero receivedChar la cantidad de caracteres 1
+
 //=====[Libraries]=============================================================
 
 #include "mbed.h"
 #include "arm_book_lib.h"
-
+#include <cstring>
 //=====[Defines]===============================================================
 
 #define NUMBER_OF_KEYS                           4
@@ -10,29 +21,32 @@
 #define BLINKING_TIME_OVER_TEMP_ALARM          500
 #define BLINKING_TIME_GAS_AND_OVER_TEMP_ALARM  100
 #define NUMBER_OF_AVG_SAMPLES                   100
-#define OVER_TEMP_LEVEL                         50
+#define OVER_TEMP_LEVEL                         30 // cuando el conversorad llegue a este valor sonará la alarma,
+// nos ayudamos con el pote para elegir a que temperatura llegar
 #define TIME_INCREMENT_MS                       10
 
 //=====[Declaration and initialization of public global objects]===============
 
-DigitalIn enterButton(BUTTON1);
-DigitalIn alarmTestButton(D2);
-DigitalIn aButton(D4);
+DigitalIn enterButton(BUTTON1); // boton azul de la placa
+DigitalIn alarmTestButton(D2); // en este caos no lo vamos a usar, ya que usmaos el lm135
+DigitalIn aButton(D4); // botones de la alarma 1100
 DigitalIn bButton(D5);
 DigitalIn cButton(D6);
 DigitalIn dButton(D7);
-DigitalIn mq2(PE_12);
+DigitalIn mq2(PE_12); // detector de gas, en este caos no lo usamos
+//D39 = PE_12, definido en pinnames.h, 
+//mbed-os/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F429xI/TARGET_NUCLEO_F429ZI/PinNames.h
 
 DigitalOut alarmLed(LED1);
-DigitalOut incorrectCodeLed(LED3);
-DigitalOut systemBlockedLed(LED2);
+DigitalOut incorrectCodeLed(LED3); // cuanod ponemos mal la alrma
+DigitalOut systemBlockedLed(LED2); // cuanod lo ponemos mal 5 veces
 
-DigitalInOut sirenPin(PE_10);
+DigitalInOut sirenPin(PE_10); //D40 //no lo usamos aca
 
 UnbufferedSerial uartUsb(USBTX, USBRX, 115200);
 
-AnalogIn potentiometer(A0);
-AnalogIn lm35(A1);
+AnalogIn potentiometer(A0); // pote
+AnalogIn lm35(A1); // detector de temperatura
 
 //=====[Declaration and initialization of public global variables]=============
 
@@ -92,8 +106,11 @@ void inputsInit()
     bButton.mode(PullDown);
     cButton.mode(PullDown);
     dButton.mode(PullDown);
-    sirenPin.mode(OpenDrain);
-    sirenPin.input();
+    sirenPin.mode(OpenDrain); // no sonando
+    sirenPin.input(); // para que no suene
+    // para que suene hay que
+    // sirenPin.output();                                     
+    // sirenPin = LOW;   
 }
 
 void outputsInit()
@@ -356,7 +373,7 @@ bool areEqual()
 }
 
 float analogReadingScaledWithTheLM35Formula( float analogReading )
-{
+{// como usamos 50 la tempmeratura seria 16500
     return ( analogReading * 3.3 / 0.01 );
 }
 
