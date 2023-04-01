@@ -1,4 +1,10 @@
-//probamos cambiando el lm35 por el pote y tambien vimos distintos tipos de print para la uart
+/**
+ * @brief   Programa de trabajo practico 3
+ * @author  Angeles Wehle
+ * @author  Axel Metzinger
+ * 
+ * probamos cambiando el lm35 por el pote y tambien vimos distintos tipos de print para la uart
+ */
 
 // formas de usar print en uart
 // potentiometerReading = potentiometer.read(); //guardo un valor
@@ -31,18 +37,18 @@
 //=====[Declaration and initialization of public global objects]===============
 
 DigitalIn enterButton(BUTTON1); // boton azul de la placa
-DigitalIn alarmTestButton(D2); // en este caos no lo vamos a usar, ya que usmaos el lm135
+DigitalIn alarmTestButton(D2); // en este caos no lo vamos a usar, ya que usmaos el lm35
 DigitalIn aButton(D4); // botones de la alarma 1100
 DigitalIn bButton(D5);
 DigitalIn cButton(D6);
 DigitalIn dButton(D7);
-DigitalIn mq2(PE_12); // detector de gas, en este caos no lo usamos
+DigitalIn mq2(PE_12); // detector de gas, en este caso no lo usamos
 //D39 = PE_12, definido en pinnames.h, 
 //mbed-os/targets/TARGET_STM/TARGET_STM32F4/TARGET_STM32F429xI/TARGET_NUCLEO_F429ZI/PinNames.h
 
 DigitalOut alarmLed(LED1);
-DigitalOut incorrectCodeLed(LED3); // cuanod ponemos mal la alrma
-DigitalOut systemBlockedLed(LED2); // cuanod lo ponemos mal 5 veces
+DigitalOut incorrectCodeLed(LED3); // cuando ponemos mal la alrma
+DigitalOut systemBlockedLed(LED2); // cuando lo ponemos mal 5 veces
 
 DigitalInOut sirenPin(PE_10); //D40 //no lo usamos aca
 
@@ -74,20 +80,63 @@ float lm35TempC            = 0.0;
 
 //=====[Declarations (prototypes) of public functions]=========================
 
+/**
+ * Inicializar el estado de las variables de entrada
+ */
 void inputsInit();
+
+/**
+ * Inicializar el estado de las variables de salida
+ */
 void outputsInit();
 
+
+/**
+ * Actualización del estado de alarma en función del estado de los detectores
+ */
 void alarmActivationUpdate();
+
+/**
+ * Desactivación de la alarma si el código introducido es correcto
+ */
 void alarmDeactivationUpdate();
 
+
+/**
+ * Permite al usuario interactuar con el programa a través del puerto serie (UART)
+ */
 void uartTask();
+
+/**
+ * Muestra la lista de comandos disponibles en el puerto serie (UART)
+ */
 void availableCommands();
+
+/**
+ * Compara si el código introducido y el código esperado coinciden
+ * @return  true si ambos códigos son iguales y false en caso contrario
+ */
 bool areEqual();
+
+/**
+ * Convierte una temperatura dada en Celsius a Fahrenheit
+ * @param   tempInCelciusDegrees    temperatura a convertir
+ * @return  la temperatura convertida en Fahrenheit
+ */
 float celsiusToFahrenheit( float tempInCelsiusDegrees );
+
+/**
+ * Convierte la tensión leída en la entrada analógica en una temperatura en grados Celsius
+ * @param   analogReading   tension en la entrada analogica
+ * @return  la temperatura en grados Celsius
+ */
 float analogReadingScaledWithTheLM35Formula( float analogReading );
 
 //=====[Main function, the program entry point after power on or reset]========
 
+/**
+ * Función principal del programa.
+ */
 int main()
 {
     inputsInit();
